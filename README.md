@@ -3,9 +3,7 @@
 Dedicated camera server for IP cameras supporting the RTSP protocol
 
 
-after getting this repository:
-
-  be sure to navigate into the cam_server directory
+after getting this repository be sure to navigate into the cam_server directory
   
   build the docker image with:
   
