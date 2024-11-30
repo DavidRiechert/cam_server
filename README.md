@@ -17,7 +17,7 @@ after getting this repository:
   
     docker run -d --rm --shm-size=512m --privileged -e CAMERA_RTSP_URL="rtsp://username:password@<camera_ip>/<camera_video_feed>" -e CAMERA_NAME="<your_camera_name>" -e SHARED_MEMORY_NAME="<your_shared_memory_name>" -p <your_port>:5000 -v /path/to/your/recordings:/recordings cam_server
   
-  each flag explained:
+# each flag explained:
   
   -d: Optionsl: runs the container detached from your terminal session
   
@@ -38,11 +38,32 @@ after getting this repository:
   cam_server: name of the image that you build, check availability of image with $ docker images
 
   
-  Once a contaiiner is running on your device, open a browser tab and navigate to http://device_ip:your_port and the live stram of your camera will appear
-  
-  all recordings can be found in the ./recordings sub_directory of your current directory
-  
-  Enjoy!!!
+Once a contaiiner is running on your device, open a browser tab and navigate to http://device_ip:your_port and the live stram of your camera will appear
+
+all recordings can be found in the ./recordings sub_directory of your current directory
+
+Enjoy!!!
 
 
-The size of the shared memory depends on several factors. The default frame rate is set to 10 FPS and the image frame size is set to 896 * 512 pixel. The size of one frame is 896 * 512 * 3 (BGR format) = 1376256 byte => 1,376 MB. At 10 FPS one second of stream buffering takes 13,76 MB of the shared memory. The default buffering of a live stream is set to 10 seconds, which requires 137,6 MB (13,76 MB/second * 10 seconds) of the shared memory. Be sure to cater for sufficient memory size when changing the frame size of frames per second.
+# Shared Memory
+
+  The size of the shared memory depends on several factors. The default frame rate is set to 10 FPS and the image frame size is set to 896 * 512 pixel. The size of one frame is 896 * 512 * 3 (BGR format) = 1376256 byte => 1,376 MB. At 10 FPS one second of stream buffering takes 13,76 MB of the shared memory. The default buffering of a live stream is set to 10 seconds, which requires 137,6 MB (13,76 MB/second * 10 seconds) of the shared memory. Be sure to cater for sufficient memory size when changing the frame size of frames per second.
+
+
+# Docker
+
+  In order to build the image you need docker to be installed and enabled on your device. In case docker is not installed, take the following steps.
+
+    sudo apt install docker
+
+    sudo systemctl enable docker.service
+
+    sudo systemctl start docker.service
+
+    sudo systemctl status docker.service
+
+    sudo usermod -a -G docker <your_username>
+
+    id <your_username>
+
+    newgrp docker
