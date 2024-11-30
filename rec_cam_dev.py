@@ -13,7 +13,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 
 # Constants
-WIDTH, HEIGHT = 896, 512
+WIDTH = int(os.environ.get("WIDTH", 896))
+HEIGHT = int(os.environ.get("HEIGHT", 512))
 FPS = int(os.environ.get("FPS", 10))
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
