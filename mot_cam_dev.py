@@ -10,18 +10,17 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 
 # Constants
-WIDTH, HEIGHT, FPS, IMAGE_QUALITY = 896, 512, 10, 50
-MOTION_THRESHOLD = 5000
-POST_MOTION_LENGTH = 5
+WIDTH, HEIGHT, IMAGE_QUALITY = 896, 512, 50
+FPS = os.environ.get("FPS", 10)
+FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
+MOTION_THRESHOLD = os.environ.get("MOTION_THRESHOLD", 5000)
+POST_MOTION_LENGTH = os.environ.get("POST_MOTION_LENGTH", 5)
 MOTION_DETECTION_INTERVAL = FRAME_INTERVAL * 3
 
 
-# Shared memory constants
+# Attach to shared Memory, this script is the producer
 SHARED_MEMORY_NAME = os.environ.get("SHARED_MEMORY_NAME", "camera_shm")
-FRAME_SIZE = WIDTH * HEIGHT * 3
-BUFFER_SIZE = FRAME_SIZE * 10
-
 
 # Attach to shared memory as consumer
 try:
