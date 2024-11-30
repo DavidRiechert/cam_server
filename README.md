@@ -2,6 +2,7 @@
 
 Dedicated camera server for IP cameras supporting the RTSP protocol
 
+
 after getting this repository:
 
   be sure to navigate into the cam_server directory
@@ -33,6 +34,7 @@ after getting this repository:
   -p the container exposes port:5000, map your desired port to access via broser 
   
   -v mount a drive to the internal /recordings directory
+
 
 
   Be sure to provide a valid rtsp-url from your IP camera, a camera name, a shared memory name, map a port to reach on your device and provide a path to the directory for storing the recordings
