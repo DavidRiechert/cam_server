@@ -49,8 +49,8 @@ def generate_frames():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame_data + b'\r\n')
 
-        time.sleep(FRAME_INTERVAL)  # Sleep to reduce CPU usage
-
+        # time.sleep(FRAME_INTERVAL)
+	
     if shm is not None:
         shm.close()
 
