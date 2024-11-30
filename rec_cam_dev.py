@@ -10,22 +10,19 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 
 # Constants
-WIDTH, HEIGHT, FPS, IMAGE_QUALITY = 896, 512, 10, 50
-PRE_MOTION_LENGTH = 10 # seconds before first motion is detected
-BUFFER_SIZE = FPS * PRE_MOTION_LENGTH
+WIDTH, HEIGHT = 896, 512
+FPS = os.environ.get("FPS", 10)
+FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
-MOTION_DETECTION_INTERVAL = FRAME_INTERVAL * 3
+BUFFER_SIZE = FPS * PRE_MOTION_LENGTH
 CAMERA_NAME = os.environ.get("CAMERA_NAME", "camera_001")
 RECORD_PATH = "/recordings"
 os.makedirs(RECORD_PATH, exist_ok=True)
 
 
-# Shared memory constants
+# Setup Shared Memory, this script is the producer
 SHARED_MEMORY_NAME = os.environ.get("SHARED_MEMORY_NAME", "camera_shm")
-FRAME_SIZE = WIDTH * HEIGHT * 3
 
-
-# Attach to shared memory as consumer
 try:
     shm = shared_memory.SharedMemory(name=SHARED_MEMORY_NAME, create=False)
     frame_array = np.ndarray((HEIGHT, WIDTH, 3), dtype=np.uint8, buffer=shm.buf[:FRAME_SIZE])
@@ -131,7 +128,7 @@ def save_video():
         else:
             logging.info("no recording!!!")
 
-        time.sleep(MOTION_DETECTION_INTERVAL)
+        time.sleep(FRAME_INTERVAL)
 
 
 if __name__ == "__main__":
