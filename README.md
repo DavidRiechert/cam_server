@@ -18,14 +18,22 @@ after getting this repository:
   
   each flag explained:
   
-  -d: runs the container detached from console 
+  -d: runs the container detached from console
+  
   --rm: container is deleted after stopped 
+  
   --shm-size: defines the actual space in MB for the shared memory 
+  
   -e CAMERA_RTSP_URL: rtsp url to your ip camera in your network (check manufacturer specs) 
+  
   -e CAMERA_NAME: Optional: name your camera for ease of reference in the recording file naming 
+  
   -e SHARED_MEMORY_NAME: Optional: name the shared memory to avoid leaks, especially when running multiple cameras on the same device 
+  
   -p the container exposes port:5000, map your desired port to access via broser 
+  
   -v mount a drive to the internal /recordings directory
+
 
   Be sure to provide a valid rtsp-url from your IP camera, a camera name, a shared memory name, map a port to reach on your device and provide a path to the directory for storing the recordings
   
