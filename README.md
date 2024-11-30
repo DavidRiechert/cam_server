@@ -54,14 +54,24 @@ Enjoy!!!
 
   In order to build the image you need docker to be installed and enabled on your device. In case docker is not installed, take the following steps.
 
+  Install Docker
+    
     sudo apt install docker
 
+  Enable the service
+  
     sudo systemctl enable docker.service
 
+  Start the service
+    
     sudo systemctl start docker.service
 
+  Check the status
+  
     sudo systemctl status docker.service
 
+  Setup your user
+  
     sudo usermod -a -G docker <your_username>
 
     id <your_username>
