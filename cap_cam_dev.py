@@ -13,11 +13,12 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 
 # Constants
-WIDTH, HEIGHT, FPS = 896, 512, 10
-PRE_MOTION_LENGTH = 10 # seconds before first motion is detected
+CAMERA_RTSP_URL = os.environ.get("CAMERA_RTSP_URL")
+WIDTH, HEIGHT = 896, 512
+FPS = os.environ.get("FPS", 10)
+PRE_MOTION_LENGTH = os.environ.get("PRE_MOTION_LENGTH ", 10) # seconds before first motion is detected
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 BUFFER_SIZE = FPS * PRE_MOTION_LENGTH
-CAMERA_RTSP_URL = os.environ.get("CAMERA_RTSP_URL")
 
 
 # Setup Shared Memory, this script is the producer
@@ -101,6 +102,9 @@ def capture_frames():
         except Exception as e:
             logging.error(f"Error during frame processing: {e}")
             break
+        
+        # Sleep to reduce CPU usage
+        time.sleep(1/FPS)
 
     # Clean up resources on shutdown
     logging.info("Releasing resources...")
