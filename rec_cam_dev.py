@@ -31,9 +31,9 @@ try:
     RECORDING_FLAG = np.ndarray((1,), dtype=np.uint8, buffer=shm.buf[FRAME_SIZE:])
     frame_buffer = np.ndarray((BUFFER_SIZE, HEIGHT, WIDTH, 3), dtype=np.uint8, buffer=shm.buf[FRAME_SIZE + 1:])
     last_write_index = np.ndarray((1,), dtype=np.uint8, buffer=shm.buf[FRAME_SIZE + 1 + BUFFER_SIZE:])
-    logging.info("mot_rec successfully attached to shared memory")
+    logging.info("rec_cam successfully attached to shared memory")
 except FileNotFoundError:
-    logging.warning(f"Shared memory {SHARED_MEMORY_NAME} not found for mot_rec. Retrying in 1 second...")
+    logging.warning(f"Shared memory {SHARED_MEMORY_NAME} not found for rec_cam. Retrying in 1 second...")
     time.sleep(1)
 logging.info(f"frame array length: {len(frame_array)}")
 
