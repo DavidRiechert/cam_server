@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import time
 import logging
+import sys
 
 
 # Logging configuration
