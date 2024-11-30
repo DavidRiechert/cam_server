@@ -15,7 +15,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 # Constants
 CAMERA_RTSP_URL = os.environ.get("CAMERA_RTSP_URL")
-WIDTH, HEIGHT = 896, 512
+WIDTH = int(os.environ.get("WIDTH", 896))
+HEIGHT = int(os.environ.get("HEIGHT", 512))
 FPS = int(os.environ.get("FPS", 10))
 PRE_MOTION_LENGTH = int(os.environ.get("PRE_MOTION_LENGTH ", 10)) # seconds before first motion is detected
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
