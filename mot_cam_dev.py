@@ -1,6 +1,7 @@
 import os
 from multiprocessing import shared_memory
 import cv2
+import numpy as np
 import time
 import logging
 
