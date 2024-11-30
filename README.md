@@ -26,8 +26,10 @@ after getting this repository:
   -e SHARED_MEMORY_NAME: Optional: name the shared memory to avoid leaks, especially when running multiple cameras on the same device 
   -p the container exposes port:5000, map your desired port to access via broser 
   -v mount a drive to the internal /recordings directory
+
+  Be sure to provide a valid rtsp-url from your IP camera, a camera name, a shared memory name, map a port to reach on your device and provide a path to the directory for storing the recordings
   
-  On a device on the same network, in a broser, navigate to your hosting http://device_ip:your_port and the live stram of your camera will appear
+  Once a contaiiner is running on your device, open a browser tab and navigate to http://device_ip:your_port and the live stram of your camera will appear
   
   all recordings can be found in the ./recordings sub_directory of your current directory
   
