@@ -1,12 +1,8 @@
 import os
-import cv2
 from multiprocessing import shared_memory
-import numpy as np
-import subprocess
+import cv2
 import time
 import logging
-from collections import deque
-from datetime import datetime
 
 
 # Logging configuration
