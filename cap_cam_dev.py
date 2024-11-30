@@ -1,8 +1,8 @@
 import os
+from multiprocessing import shared_memory
 import subprocess
 import cv2
 import numpy as np
-from multiprocessing import shared_memory
 import signal
 import logging
 import sys
