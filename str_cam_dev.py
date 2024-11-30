@@ -16,10 +16,16 @@ app = Flask(__name__)
 
 
 # Constants
-WIDTH, HEIGHT, FPS, IMAGE_QUALITY = 896, 512, 10, 50
-SHARED_MEMORY_NAME = os.environ.get("SHARED_MEMORY_NAME", "camera_shm")
-FRAME_SIZE = WIDTH * HEIGHT * 3
+WIDTH, HEIGHT, IMAGE_QUALITY = 896, 512, 50
+FPS = os.environ.get("FPS", 10)
+FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
+
+
+
+
+SHARED_MEMORY_NAME = os.environ.get("SHARED_MEMORY_NAME", "camera_shm")
+
 
 
 # Attach to shared memory as consumer
