@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 # Constants
 WIDTH, HEIGHT = 896, 512
-FPS = os.environ.get("FPS", 10)
+FPS = int(os.environ.get("FPS", 10))
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
 PRE_MOTION_LENGTH = os.environ.get("PRE_MOTION_LENGTH", 10) # seconds before first motion is detected
