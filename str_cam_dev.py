@@ -22,11 +22,8 @@ FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
 
 
-
-
+# Attach to shared Memory, this script is the producer
 SHARED_MEMORY_NAME = os.environ.get("SHARED_MEMORY_NAME", "camera_shm")
-
-
 
 # Attach to shared memory as consumer
 try:
@@ -36,7 +33,7 @@ try:
 except FileNotFoundError:
     logging.warning(f"Shared memory {SHARED_MEMORY_NAME} not found for str_cam. Retrying in 1 second...")
     time.sleep(1)
-
+	
 
 def generate_frames():
     """Generate frames for streaming."""
