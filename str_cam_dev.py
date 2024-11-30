@@ -1,18 +1,18 @@
 import os
+from multiprocessing import shared_memory
 import cv2
 import numpy as np
-from multiprocessing import shared_memory
 from flask import Flask, Response
 import time
 import logging
 
 
-# Flask app
-app = Flask(__name__)
-
-
 # Logging configuration
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+
+# Flask app
+app = Flask(__name__)
 
 
 # Constants
