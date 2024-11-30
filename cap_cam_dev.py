@@ -18,6 +18,7 @@ WIDTH, HEIGHT = 896, 512
 FPS = os.environ.get("FPS", 10)
 PRE_MOTION_LENGTH = os.environ.get("PRE_MOTION_LENGTH ", 10) # seconds before first motion is detected
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
+FRAME_INTERVAL = 1 / FPS
 BUFFER_SIZE = FPS * PRE_MOTION_LENGTH
 
 
@@ -104,7 +105,7 @@ def capture_frames():
             break
         
         # Sleep to reduce CPU usage
-        time.sleep(1/FPS)
+        time.sleep(FRAME_INTERVAL)
 
     # Clean up resources on shutdown
     logging.info("Releasing resources...")
