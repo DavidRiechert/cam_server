@@ -13,11 +13,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 # Constants
 WIDTH, HEIGHT, IMAGE_QUALITY = 896, 512, 50
-FPS = os.environ.get("FPS", 10)
+FPS = int(os.environ.get("FPS", 10))
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
 MOTION_THRESHOLD = os.environ.get("MOTION_THRESHOLD", 5000)
-POST_MOTION_LENGTH = os.environ.get("POST_MOTION_LENGTH", 5)
+POST_MOTION_LENGTH = int(os.environ.get("POST_MOTION_LENGTH", 5))
 MOTION_DETECTION_INTERVAL = FRAME_INTERVAL * 3
 
 
