@@ -106,7 +106,7 @@ def capture_frames():
             break
         
         # Sleep to reduce CPU usage
-        time.sleep(FRAME_INTERVAL)
+        # time.sleep(FRAME_INTERVAL)
 
     # Clean up resources on shutdown
     logging.info("Releasing resources...")
