@@ -48,8 +48,9 @@ def generate_frames():
             # Yield the frame as a byte-stream in multipart format
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame_data + b'\r\n')
-
-        # time.sleep(FRAME_INTERVAL)
+	
+	logging.info(FPS)
+        time.sleep(FRAME_INTERVAL)
 	
     if shm is not None:
         shm.close()
