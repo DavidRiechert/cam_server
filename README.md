@@ -17,7 +17,7 @@ after getting this repository be sure to navigate into the cam_server directory
   
 # each flag explained:
   
-  -d: Optionsl: runs the container detached from your terminal session
+  -d: Optional: runs the container detached from your terminal session
   
   --rm: Optional: container is deleted automatically after stopped with $ docker stop <container_id/container_name> 
   
