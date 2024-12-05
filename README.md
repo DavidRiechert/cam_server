@@ -60,7 +60,7 @@ Enjoy!!!
 
   Install Docker
     
-    sudo apt install docker
+    sudo apt install docker.io
 
   Enable the service
   
