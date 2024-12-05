@@ -2,6 +2,7 @@
 
 Dedicated camera server for IP cameras supporting the RTSP protocol
 
+    git clone https://github.com/DavidRiechert/cam_server.git
 
 after getting this repository be sure to navigate into the cam_server directory
   
