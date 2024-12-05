@@ -52,6 +52,11 @@ Enjoy!!!
 
   In order to build the image you need docker to be installed and enabled on your device. In case docker is not installed, take the following steps.
 
+  Update and Upgrade
+
+    sudo apt update
+    sudo apt upgrade
+
   Install Docker
     
     sudo apt install docker
