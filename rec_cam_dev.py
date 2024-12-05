@@ -4,6 +4,7 @@ import numpy as np
 import subprocess
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import logging
 import sys
 
@@ -21,6 +22,7 @@ FRAME_INTERVAL = 1 / FPS
 PRE_MOTION_LENGTH = int(os.environ.get("PRE_MOTION_LENGTH", 10)) # seconds before first motion is detected
 BUFFER_SIZE = FPS * PRE_MOTION_LENGTH
 CAMERA_NAME = os.environ.get("CAMERA_NAME", "camera_001")
+LOCAL_TIMEZONE = os.environ.get("LOCAL_TIMEZONE", "Europe/Stockholm")
 RECORD_PATH = "/recordings"
 os.makedirs(RECORD_PATH, exist_ok=True)
 
@@ -50,7 +52,8 @@ def save_video():
         if RECORDING_FLAG[0] == 1:
 
             # Start FFmpeg process for recording
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            local_timezone = ZoneInfo(LOCAL_TIMEZONE)
+            timestamp = datetime.now(local_timezone).strftime("%Y-%m-%d_%H-%M-%S")
             output_file = f"{RECORD_PATH}/{CAMERA_NAME}_{timestamp}.mp4"
 
             # FFmpeg command
