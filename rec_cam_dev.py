@@ -45,14 +45,15 @@ logging.info(f"frame array length: {len(frame_array)}")
 
 def save_video():
     """Save video using FFmpeg."""
-
+    
+    local_timezone = ZoneInfo(LOCAL_TIMEZONE)
+    
     while True:
         logging.info("recording_flag below:")
         logging.info(RECORDING_FLAG[0])
         if RECORDING_FLAG[0] == 1:
 
             # Start FFmpeg process for recording
-            local_timezone = ZoneInfo(LOCAL_TIMEZONE)
             timestamp = datetime.now(local_timezone).strftime("%Y-%m-%d_%H-%M-%S")
             output_file = f"{RECORD_PATH}/{CAMERA_NAME}_{timestamp}.mp4"
 
