@@ -48,14 +48,23 @@ Enjoy!!!
 Environment variables can be set when running the container in the same way we have seen in the docker run command before. Simple put -e "VARIABLE_NAME" for each variable. Below is a comprehensive list of all possible variables and its default values:
 
 WIDTH = int(os.environ.get("WIDTH", 896))
+
 HEIGHT = int(os.environ.get("HEIGHT", 512))
+
 IMAGE_QUALITY = int(os.environ.get("IMAGE_QUALITY", 60))
+
 FPS = int(os.environ.get("FPS", 10))
+
 PRE_MOTION_LENGTH = int(os.environ.get("PRE_MOTION_LENGTH", 10))
+
 CAMERA_NAME = os.environ.get("CAMERA_NAME", "camera_001")
+
 LOCAL_TIMEZONE = os.environ.get("LOCAL_TIMEZONE", "Europe/Stockholm")
+
 MOTION_THRESHOLD = int(os.environ.get("MOTION_THRESHOLD", 5000))
+
 POST_MOTION_LENGTH = int(os.environ.get("POST_MOTION_LENGTH", 5))
+
 
 
 # Shared Memory
