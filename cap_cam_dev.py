@@ -4,6 +4,9 @@ import subprocess
 import cv2
 import numpy as np
 import time
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+import shutil
 import signal
 import logging
 import sys
@@ -22,6 +25,8 @@ PRE_MOTION_LENGTH = int(os.environ.get("PRE_MOTION_LENGTH ", 10)) # seconds befo
 FRAME_SIZE = WIDTH * HEIGHT * 3  # BGR format
 FRAME_INTERVAL = 1 / FPS
 BUFFER_SIZE = FPS * PRE_MOTION_LENGTH
+LOCAL_TIMEZONE = os.environ.get("LOCAL_TIMEZONE", "Europe/Stockholm")
+RECORD_PATH = "/recordings"
 
 
 # Setup Shared Memory, this script is the producer
@@ -44,12 +49,44 @@ except Exception as e:
 # Flag to control graceful shutdown
 running = True
 
+# Setting local timezone
+local_timezone = ZoneInfo(LOCAL_TIMEZONE)
+
 
 def signal_handler(sig, frame):
     """Handle termination signals (e.g., Ctrl+C)."""
     global running
     logging.info("Shutting down capture process...")
     running = False
+
+
+def move_recordings():
+    # Ensure the destination folder exists
+
+    previous_date = (datetime.now(local_timezone) - timedelta(days=1)).strftime("%Y-%m-%d")
+    destination_folder = f"/recordings/{previous_date}"
+
+    if not os.path.exists(destination_folder):
+        os.makedirs(destination_folder, exist_ok=True)
+
+    # Iterate through all files in the source folder
+    for filename in os.listdir(RECORD_PATH):
+        source_path = os.path.join(RECORD_PATH, filename)
+        destination_path = os.path.join(destination_folder, filename)
+
+        # Only move files (skip directories)
+        if os.path.isfile(source_path):
+
+            if previous_date in filename:
+                file_size = os.path.getsize(source_path) / (1024 * 1024)  # Convert bytes to MB
+
+                # Construct the new filename with size appended
+                name, ext = os.path.splitext(filename)
+                new_filename = f"{name}_{file_size:.2f}MB{ext}"
+                destination_path = os.path.join(destination_folder, new_filename)
+
+                shutil.move(source_path, destination_path)
+                logging.info(f"Moved: {source_path} -> {destination_path}")
 
 
 def capture_frames():
@@ -102,12 +139,16 @@ def capture_frames():
             last_write_index[0] = write_index
             write_index = (write_index + 1) % BUFFER_SIZE
 
+            current_time = datetime.now(local_timezone)
+            if current_time.hour == 3 and current_time.minute == 0:
+                move_recordings()
+
         except Exception as e:
             logging.error(f"Error during frame processing: {e}")
             break
         
         # Sleep to reduce CPU usage
-        # time.sleep(FRAME_INTERVAL)
+        time.sleep(FRAME_INTERVAL)
 
     # Clean up resources on shutdown
     logging.info("Releasing resources...")
