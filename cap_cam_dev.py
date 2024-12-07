@@ -114,7 +114,6 @@ def capture_frames():
     # Launch the FFmpeg process
     process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    frame_index = 0
     write_index = 0
     
     while True:
@@ -127,19 +126,7 @@ def capture_frames():
             
             # Read raw frame data (WIDTH * HEIGHT * 3 for BGR format)
             raw_frame = process.stdout.read(WIDTH * HEIGHT * 3)
-
-            text = f'Frame: {frame_index}'
-
-            # Define font and position
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            text_size = cv2.getTextSize(text, font, 1, 2)[0]
-            text_x = raw_frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
-            text_y = text_size[1] + 10  # 10 pixels from the top
-        
-            # Draw the text on the annotated frame
-            cv2.putText(raw_frame, text, (text_x, text_y), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
-
-            
+           
             # Check if the frame is complete
             if len(raw_frame) != WIDTH * HEIGHT * 3:
                 logging.warning("Incomplete frame received. Skipping this frame.")
@@ -150,7 +137,6 @@ def capture_frames():
 
             # Write frame to shared memory
             frame_array[:] = frame
-            frame_index = frame_index + 1
             logging.info("Frame written to shared memory.")
 
             # Write the frame to the circular buffer
