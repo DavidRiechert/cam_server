@@ -95,21 +95,25 @@ def capture_frames():
 
     ffmpeg_cmd = [
         'ffmpeg',
-        #'-hwaccel', 'v4l2',
+        '-hwaccel', 'v4l2', # Enable hardware acceleration
         '-rtsp_transport', 'tcp',
+        '-stimeout', '5000000', # Timeout after 5 seconds (in microseconds)
+        '-reconnect', '1', # Enable reconnection
+        '-reconnect_at_eof', '1', # Reconnect if the end of file is reached
+        '-reconnect_streamed', '1', 
         '-i', CAMERA_RTSP_URL,
-        '-an',  # Disable audio processing
-        '-vf', f'scale={WIDTH}:{HEIGHT}',
+        '-an', # Disable audio processing
+        #'-vf', f'scale={WIDTH}:{HEIGHT}',
         '-r', f'{FPS}',
-        #'-preset', 'ultrafast',
         '-q:v', '31',
         '-pix_fmt', 'bgr24',
         '-vcodec', 'rawvideo',
-        '-f', 'mjpeg',
+        #'-f', 'mjpeg',
+        '-f', 'rawvideo',
         '-fflags', 'nobuffer',
         '-flags', 'low_delay',
         '-avioflags', 'direct',
-        '-timeout', '100000',
+        '-timeout', '300000',
         '-'
     ]
 
