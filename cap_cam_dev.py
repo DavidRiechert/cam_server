@@ -95,7 +95,7 @@ def capture_frames():
 
     ffmpeg_cmd = [
         'ffmpeg',
-        '-hwaccel', 'v4l2',
+        #'-hwaccel', 'v4l2',
         '-rtsp_transport', 'tcp',
         '-i', CAMERA_RTSP_URL,
         '-an',  # Disable audio processing
