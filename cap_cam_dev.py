@@ -141,7 +141,7 @@ def capture_frames():
             # Define font and position
             font = cv2.FONT_HERSHEY_SIMPLEX
             text_size = cv2.getTextSize(text, font, 1, 2)[0]
-            text_x = annotated_frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
+            text_x = frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
             text_y = text_size[1] + 10  # 10 pixels from the top
         
             # Draw the text on the annotated frame
