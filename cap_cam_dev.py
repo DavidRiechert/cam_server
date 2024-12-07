@@ -124,10 +124,22 @@ def capture_frames():
                 logging.warning("Process terminated. Restarting...")
                 process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 continue
-
+            
             # Read raw frame data (WIDTH * HEIGHT * 3 for BGR format)
             raw_frame = process.stdout.read(WIDTH * HEIGHT * 3)
 
+            text = f'Frame: {frame_index}'
+
+            # Define font and position
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            text_size = cv2.getTextSize(text, font, 1, 2)[0]
+            text_x = raw_frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
+            text_y = text_size[1] + 10  # 10 pixels from the top
+        
+            # Draw the text on the annotated frame
+            cv2.putText(raw_frame, text, (text_x, text_y), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
+
+            
             # Check if the frame is complete
             if len(raw_frame) != WIDTH * HEIGHT * 3:
                 logging.warning("Incomplete frame received. Skipping this frame.")
@@ -135,17 +147,6 @@ def capture_frames():
 
             # Convert the raw bytes into a numpy array (frame)
             frame = np.frombuffer(raw_frame, np.uint8).reshape((HEIGHT, WIDTH, 3))
-
-            text = f'Frame: {frame_index}'
-
-            # Define font and position
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            text_size = cv2.getTextSize(text, font, 1, 2)[0]
-            text_x = frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
-            text_y = text_size[1] + 10  # 10 pixels from the top
-        
-            # Draw the text on the annotated frame
-            cv2.putText(frame, text, (text_x, text_y), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
             # Write frame to shared memory
             frame_array[:] = frame
