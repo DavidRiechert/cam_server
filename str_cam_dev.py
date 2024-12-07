@@ -40,7 +40,7 @@ except FileNotFoundError:
 def generate_frames():
     """Generate frames for streaming."""
 
-	while True:
+    while True:
         frame = frame_array.copy()
 
         if frame is not None:
