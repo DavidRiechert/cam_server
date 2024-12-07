@@ -40,24 +40,11 @@ except FileNotFoundError:
 def generate_frames():
     """Generate frames for streaming."""
 
-    frame_index = 0
-
-    while True:
+	while True:
         frame = frame_array.copy()
 
         if frame is not None:
-		               
-            text = f'Frame: {frame_index}'
-
-            # Define font and position
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            text_size = cv2.getTextSize(text, font, 1, 2)[0]
-            text_x = frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
-            text_y = text_size[1] + 10  # 10 pixels from the top
-        
-            # Draw the text on the annotated frame
-            cv2.putText(frame, text, (text_x, text_y), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
-	    
+		                  
             # Encode the frame to JPEG format for streaming
             _, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), IMAGE_QUALITY])
             frame_data = buffer.tobytes()
@@ -65,8 +52,6 @@ def generate_frames():
             # Yield the frame as a byte-stream in multipart format
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame_data + b'\r\n')
-
-            frame_index = frame_index + 1
         
         logging.info(FPS)
         time.sleep(FRAME_INTERVAL)
