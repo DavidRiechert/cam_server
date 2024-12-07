@@ -23,6 +23,8 @@ after getting this repository be sure to navigate into the cam_server directory
   --rm: Optional: container is deleted automatically after stopped with $ docker stop <container_id/container_name> 
   
   --shm-size: Required: defines the actual space in MB for the shared memory (512m reserves 512MB of memory on your devices) 
+
+  --privileged: Required: allows for direct communication with host device hardware e.g. /video/video0
   
   -e CAMERA_RTSP_URL: Required: rtsp url to your IP camera in your network, be sure to setup an account on the camera with username:password (check camera manufacturer specs) 
   
