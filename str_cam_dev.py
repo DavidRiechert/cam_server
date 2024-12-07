@@ -46,8 +46,8 @@ def generate_frames():
         frame = frame_array.copy()
 
         if frame is not None:
-		                
-	    text = f'Frame: {frame_index}'
+		               
+            text = f'Frame: {frame_index}'
 
             # Define font and position
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -58,7 +58,7 @@ def generate_frames():
             # Draw the text on the annotated frame
             cv2.putText(frame, text, (text_x, text_y), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
 	    
-	    # Encode the frame to JPEG format for streaming
+            # Encode the frame to JPEG format for streaming
             _, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), IMAGE_QUALITY])
             frame_data = buffer.tobytes()
 
@@ -68,7 +68,7 @@ def generate_frames():
 
             frame_index = frame_index + 1
         
-	logging.info(FPS)
+        logging.info(FPS)
         time.sleep(FRAME_INTERVAL)
 	
     if shm is not None:
