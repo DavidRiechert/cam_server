@@ -86,8 +86,10 @@ def detect_motion():
                     logging.info("Frame processed for motion detection.")
                 else:
                     logging.warning("Frame contains no data. Skipping frame.")
+                    
             except Exception as e:
                 logging.error(f"Error processing frame: {e}")
+                continue
 
         else:
             logging.info("Frame buffer is empty. Waiting for frames...")
