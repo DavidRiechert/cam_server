@@ -170,6 +170,7 @@ def capture_frames():
         stderr_output = process.stderr.read(1024)
         if stderr_output:
             logging.error(stderr_output.decode())
+            continue
         
         # Sleep to reduce CPU usage
         time.sleep(FRAME_INTERVAL)
