@@ -112,12 +112,19 @@ def capture_frames():
     ]
 
     # Launch the FFmpeg process
-    process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+    frame_index = 0
     write_index = 0
-
+    
     while True:
         try:
+
+            if process.poll() is not None:  # Check if the process is terminated
+                logging.warning("Process terminated. Restarting...")
+                process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                continue
+
             # Read raw frame data (WIDTH * HEIGHT * 3 for BGR format)
             raw_frame = process.stdout.read(WIDTH * HEIGHT * 3)
 
@@ -129,8 +136,20 @@ def capture_frames():
             # Convert the raw bytes into a numpy array (frame)
             frame = np.frombuffer(raw_frame, np.uint8).reshape((HEIGHT, WIDTH, 3))
 
+            text = f'Frame: {frame_index}'
+
+            # Define font and position
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            text_size = cv2.getTextSize(text, font, 1, 2)[0]
+            text_x = annotated_frame.shape[1] - text_size[0] - 10  # 10 pixels from the right
+            text_y = text_size[1] + 10  # 10 pixels from the top
+        
+            # Draw the text on the annotated frame
+            cv2.putText(frame, text, (text_x, text_y), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
+
             # Write frame to shared memory
             frame_array[:] = frame
+            frame_index = frame_index + 1
             logging.info("Frame written to shared memory.")
 
             # Write the frame to the circular buffer
@@ -142,10 +161,15 @@ def capture_frames():
             current_time = datetime.now(local_timezone)
             if current_time.hour == 3 and current_time.minute == 0:
                 move_recordings()
+                continue
 
         except Exception as e:
             logging.error(f"Error during frame processing: {e}")
-            break
+            continue
+
+        stderr_output = process.stderr.read(1024)
+        if stderr_output:
+            logging.error(stderr_output.decode())
         
         # Sleep to reduce CPU usage
         time.sleep(FRAME_INTERVAL)
