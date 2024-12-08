@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libv4l-dev \
     v4l-utils \
     build-essential \
-    apt-utils
+    apt-utils \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir flask opencv-python-headless numpy ultralytics
