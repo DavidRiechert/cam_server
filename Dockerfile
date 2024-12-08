@@ -3,6 +3,11 @@ FROM python:3.11-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     libopencv-dev \
+    #libx264-dev \
+    #libv4l-dev \
+    #v4l-utils \
+    #build-essential \
+    #apt-utils
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir flask opencv-python-headless numpy
