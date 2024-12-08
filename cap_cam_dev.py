@@ -1,4 +1,5 @@
 import os
+import threading
 from multiprocessing import shared_memory
 import subprocess
 import cv2
@@ -95,30 +96,29 @@ def capture_frames():
 
     ffmpeg_cmd = [
         'ffmpeg',
-        '-hwaccel', 'v4l2', # Enable hardware acceleration
+        #'-hwaccel', 'v4l2', # Enable hardware acceleration
         '-rtsp_transport', 'tcp',
-        '-stimeout', '5000000', # Timeout after 5 seconds (in microseconds)
-        '-reconnect', '1', # Enable reconnection
-        '-reconnect_at_eof', '1', # Reconnect if the end of file is reached
-        '-reconnect_streamed', '1', 
         '-i', CAMERA_RTSP_URL,
         '-an', # Disable audio processing
-        #'-vf', f'scale={WIDTH}:{HEIGHT}',
+        '-vf', f'scale={WIDTH}:{HEIGHT}',
         '-r', f'{FPS}',
+        '-preset', 'ultrafast',
         '-q:v', '31',
         '-pix_fmt', 'bgr24',
         '-vcodec', 'rawvideo',
-        #'-f', 'mjpeg',
-        '-f', 'rawvideo',
+        '-f', 'mjpeg',
         '-fflags', 'nobuffer',
         '-flags', 'low_delay',
         '-avioflags', 'direct',
-        '-timeout', '300000',
+        '-timeout', '100000',
+        '-reconnect', '1',
+        '-reconnect_at_eof', '1',
+        '-reconnect_streamed', '1', 
         '-'
     ]
 
     # Launch the FFmpeg process
-    process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     write_index = 0
     
@@ -127,7 +127,8 @@ def capture_frames():
 
             if process.poll() is not None:  # Check if the process is terminated
                 logging.warning("Process terminated. Restarting...")
-                process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                time.sleep(1)
+                process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
                 continue
             
             # Read raw frame data (WIDTH * HEIGHT * 3 for BGR format)
@@ -153,17 +154,16 @@ def capture_frames():
 
             current_time = datetime.now(local_timezone)
             if current_time.hour == 3 and current_time.minute == 0:
-                move_recordings()
-                continue
+                threading.Thread(target=move_recordings, daemon=True).start()
 
         except Exception as e:
             logging.error(f"Error during frame processing: {e}")
             continue
 
-        stderr_output = process.stderr.read(1024)
-        if stderr_output:
-            logging.error(stderr_output.decode())
-            continue
+        #stderr_output = process.stderr.read(1024)
+        #if stderr_output:
+        #    logging.error(stderr_output.decode())
+        #    continue
         
         # Sleep to reduce CPU usage
         time.sleep(FRAME_INTERVAL)
