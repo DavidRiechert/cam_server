@@ -4,6 +4,10 @@ Dedicated camera server for IP cameras supporting the RTSP protocol
 
     git clone https://github.com/DavidRiechert/cam_server.git
 
+In case git is not installed on your host device, you can install it with the following command:
+
+    sudo apt install git
+
 after getting this repository be sure to navigate into the cam_server directory
   
   build the docker image with:
