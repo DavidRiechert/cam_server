@@ -103,17 +103,18 @@ def capture_frames():
         '-vf', f'scale={WIDTH}:{HEIGHT}',
         '-r', f'{FPS}',
         '-preset', 'ultrafast',
-        '-q:v', '31',
-        '-pix_fmt', 'bgr24',
+        #'-q:v', 31,
+        #'-pix_fmt', 'bgr24',
         '-vcodec', 'rawvideo',
         '-f', 'mjpeg',
         '-fflags', 'nobuffer',
         '-flags', 'low_delay',
         '-avioflags', 'direct',
-        '-timeout', '100000',
-        '-reconnect', '1',
-        '-reconnect_at_eof', '1',
-        '-reconnect_streamed', '1', 
+        '-timeout', 100000,
+        '-stimeout', 5000000,
+        '-reconnect', 1,
+        '-reconnect_at_eof', 1,
+        '-reconnect_streamed', 1, 
         '-'
     ]
 
@@ -126,11 +127,11 @@ def capture_frames():
         try:
 
             if process.poll() is not None:  # Check if the process is terminated
-                logging.warning("Process terminated. Restarting...")
-                time.sleep(1)
+                logging.warning("FFmpeg process terminated unexpectedly. Restarting...")
+                process.terminate()
                 process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
                 continue
-            
+
             # Read raw frame data (WIDTH * HEIGHT * 3 for BGR format)
             raw_frame = process.stdout.read(WIDTH * HEIGHT * 3)
            
