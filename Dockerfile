@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir flask opencv-python-headless numpy ultralytics
+RUN pip install --no-cache-dir flask opencv-python-headless numpy
 
 COPY cap_cam_dev.py /app/cap_cam.py
 COPY str_cam_dev.py /app/str_cam.py
