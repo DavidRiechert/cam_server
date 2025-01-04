@@ -96,25 +96,30 @@ def capture_frames():
 
     ffmpeg_cmd = [
         'ffmpeg',
-        #'-hwaccel', 'v4l2', # Enable hardware acceleration
-        '-rtsp_transport', 'tcp',
-        '-i', CAMERA_RTSP_URL,
-        '-an', # Disable audio processing
-        '-vf', f'scale={WIDTH}:{HEIGHT}',
-        '-r', f'{FPS}',
-        '-preset', 'ultrafast',
-        #'-q:v', '31',
-        '-pix_fmt', 'bgr24',
-        '-vcodec', 'rawvideo',
-        '-f', 'mjpeg',
-        '-fflags', 'nobuffer',
-        '-flags', 'low_delay',
-        '-avioflags', 'direct',
-        #'-timeout', '100000',
-        #'-stimeout', '500000',
-        '-reconnect', '1',
-        '-reconnect_at_eof', '1',
-        '-reconnect_streamed', '1', 
+        '-loglevel', 'debug',
+        # Input-specific flags
+        '-rtsp_transport', 'tcp',  # Use TCP for RTSP
+#        '-reconnect', '1',  # Enable reconnect
+#        '-reconnect_at_eof', '1',
+#        '-reconnect_streamed', '1',
+        '-timeout', '1000000',  # Set connection timeout (socket-level)
+#        '-stimeout', '2000000',  # Set stream timeout
+#        '-rw_timeout', '10000000',  # Set read/write timeout
+        # Input source
+        '-i', CAMERA_RTSP_URL,  # Input RTSP stream
+        # Processing and output flags
+        '-an',  # Disable audio processing
+        '-vf', f'scale={WIDTH}:{HEIGHT}',  # Video filter: scale resolution
+        '-r', f'{FPS}',  # Set output frame rate
+#        '-preset', 'ultrafast',  # Set encoder preset
+        '-vcodec', 'rawvideo',  # Set video codec (uncompressed raw video)
+        '-pix_fmt', 'bgr24',  # Pixel format for raw video
+#        '-c:v', 'h264',  #'mjpeg',  # Use H.264 codec (replaces rawvideo, if needed)
+        '-f', 'rawvideo',  # Output format (mjpeg)
+#        '-fflags', 'nobuffer',  # Disable input buffering
+        '-flags', 'low_delay',  # Enable low-latency processing
+        '-avioflags', 'direct',  # Direct I/O for reduced latency
+        # Output stream
         '-'
     ]
 
@@ -124,34 +129,35 @@ def capture_frames():
     write_index = 0
     
     while True:
+        logging.info("cap_cap loop running...")
         try:
 
             if process.poll() is not None:  # Check if the process is terminated
                 logging.warning("FFmpeg process terminated unexpectedly. Restarting...")
                 process.terminate()
                 process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-                continue
+#                continue
 
             # Read raw frame data (WIDTH * HEIGHT * 3 for BGR format)
             raw_frame = process.stdout.read(WIDTH * HEIGHT * 3)
            
             # Check if the frame is complete
-            if len(raw_frame) != WIDTH * HEIGHT * 3:
+            if len(raw_frame) != FRAME_SIZE:
                 logging.warning("Incomplete frame received. Skipping this frame.")
                 continue  # Skip to the next iteration
 
             # Convert the raw bytes into a numpy array (frame)
-            frame = np.frombuffer(raw_frame, np.uint8).reshape((HEIGHT, WIDTH, 3))
-
+            frame = np.frombuffer(raw_frame, np.uint8).reshape((HEIGHT, WIDTH, 3)) 
+           
             # Write frame to shared memory
             frame_array[:] = frame
             logging.info("Frame written to shared memory.")
 
             # Write the frame to the circular buffer
-            frame_buffer[write_index] = frame
-            logging.info(f"Frame written to buffer at index {write_index}")
-            last_write_index[0] = write_index
-            write_index = (write_index + 1) % BUFFER_SIZE
+#            frame_buffer[write_index] = frame
+#            logging.info(f"Frame written to buffer at index {write_index}")
+#            last_write_index[0] = write_index
+#            write_index = (write_index + 1) % BUFFER_SIZE
 
             current_time = datetime.now(local_timezone)
             if current_time.hour == 3 and current_time.minute == 0:
@@ -161,10 +167,10 @@ def capture_frames():
             logging.error(f"Error during frame processing: {e}")
             continue
 
-        #stderr_output = process.stderr.read(1024)
-        #if stderr_output:
-        #    logging.error(stderr_output.decode())
-        #    continue
+#        stderr_output = process.stderr.read(1024)
+#        if stderr_output:
+#            logging.error(stderr_output.decode())
+#            continue
         
         # Sleep to reduce CPU usage
         time.sleep(FRAME_INTERVAL)
