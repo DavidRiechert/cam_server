@@ -35,7 +35,7 @@ try:
 except FileNotFoundError:
     logging.warning(f"Shared memory {SHARED_MEMORY_NAME} not found for str_cam. Retrying in 1 second...")
     time.sleep(1)
-	
+        
 
 def generate_frames():
     """Generate frames for streaming."""
@@ -44,7 +44,7 @@ def generate_frames():
         frame = frame_array.copy()
 
         if frame is not None:
-		                  
+                                  
             # Encode the frame to JPEG format for streaming
             _, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), IMAGE_QUALITY])
             frame_data = buffer.tobytes()
@@ -55,7 +55,7 @@ def generate_frames():
         
         logging.info(FPS)
         time.sleep(FRAME_INTERVAL)
-	
+        
     if shm is not None:
         shm.close()
 
