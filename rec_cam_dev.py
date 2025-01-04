@@ -42,7 +42,6 @@ except FileNotFoundError:
     time.sleep(1)
 logging.info(f"frame array length: {len(frame_array)}")
 
-
 def save_video():
     """Save video using FFmpeg."""
     
@@ -59,15 +58,16 @@ def save_video():
 
             # FFmpeg command
             ffmpeg_cmd = [
-                "ffmpeg",
-                "-y",
-                "-f", "rawvideo",
-                "-pixel_format", "bgr24",
-                "-video_size", f"{WIDTH}x{HEIGHT}",
-                "-framerate", str(FPS),
-                "-i", "-",
-                "-c:v", "libx264",
-                "-pix_fmt", "yuv420p",
+                'ffmpeg',
+                '-loglevel', 'debug',
+                '-y',
+                '-f', 'rawvideo',
+                '-pixel_format', 'bgr24',
+                '-video_size', f'{WIDTH}x{HEIGHT}',
+                '-framerate', str(FPS),
+                '-i', '-',
+                '-c:v', 'libx264',
+                '-pix_fmt', 'yuv420p',
                 output_file
             ]
 
@@ -87,17 +87,17 @@ def save_video():
                         current_frame = frame_array.copy()
                         if not np.array_equal(current_frame, last_written_frame):
 
-                            if frame_count == 0:
-                                latest_write_index = last_write_index[0]
-                                logging.info("start pre motion frame handling")
-                                logging.info(f"first last_write_index: {last_write_index[0]}")
-                                latest_frames = [frame.copy() for frame in frame_buffer[0:latest_write_index]]
-                                if last_write_index[0] < BUFFER_SIZE - 1:
-                                    oldest_frames = [frame.copy() for frame in frame_buffer[last_write_index[0] + 1:BUFFER_SIZE]]
-                                else:
-                                    oldest_frames = []
-                                all_frames.extend(oldest_frames + latest_frames)
-                                logging.info(f"Pre-motion frames added: {len(all_frames)}")
+#                            if frame_count == 0:
+#                                latest_write_index = last_write_index[0]
+#                                logging.info("start pre motion frame handling")
+#                                logging.info(f"first last_write_index: {last_write_index[0]}")
+#                                latest_frames = [frame.copy() for frame in frame_buffer[0:latest_write_index]]
+#                                if last_write_index[0] < BUFFER_SIZE - 1:
+#                                    oldest_frames = [frame.copy() for frame in frame_buffer[last_write_index[0] + 1:BUFFER_SIZE]]
+#                                else:
+#                                    oldest_frames = []
+#                                all_frames.extend(oldest_frames + latest_frames)
+#                                logging.info(f"Pre-motion frames added: {len(all_frames)}")
 
                             if len(all_frames) == 0 or not np.array_equal(current_frame, all_frames[-1]):
                                 all_frames.append(current_frame.copy())
